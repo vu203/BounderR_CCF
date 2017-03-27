@@ -1,6 +1,4 @@
-# TIP FLUORESCENCE IN CCF - GENERAL SCRIPT
-
-rm(list = ls())
+# TIP FLUORESCENCE & MOVEMENT - general CCF script
 
 # This script is part of a suite of scripts for analysis of filopodia dynamics 
 # using the Fiji plugin Bounder. The questions addressed here are whether the 
@@ -15,13 +13,15 @@ rm(list = ls())
 
 # Data input: requires an .Rdata file from upstream BounderR .R scripts (load in Section 1).
 
-# Data output:  a CCF table (ccf.tip.dctm) and their heatmap; 
-# 				top-correlating subcluster ('TCS') and other filopodia ('nonTCS')
+# Data output:  a CCF table (ccf.tip.dctm) and its clustered heatmap; 
+# 				top-correlating subcluster ('TCS') vs other filopodia ('nonTCS')
 
 # Downstream applications:  1. Subcluster analysis (CCF, phenotype)  2. Randomisation analysis
 
 # For more information contact the author (Vasja Urbancic) at vu203@cam.ac.uk.
 
+ 
+rm(list = ls())
 
 # ---------------------------------------------------------------------------
 # 0. DEPENDENCIES:
@@ -204,7 +204,6 @@ if (length(short.lengths) > 0) {
 	rm(remove.cols)
 }
 
-
 #  ---------------------------------------------------------------------------
 # Derived datasets:
 
@@ -297,6 +296,11 @@ for (i in all.filo) {
 colnames(ccf.tip.dctm) <- colnames(all.move)
 row.names(ccf.tip.dctm)  <- lag.in.s
 
+
+# The lag k value returned by ccf(x, y) estimates the correlation between x[t+k] and y[t].
+# i.e. lag k for ccf(tip, move) estimates correlation between tip.f[t+k] and move[t]
+# i.e. lag +2 means correlation between tip.f[t+2] and move[t] --> tip.f lagging behind movement
+# i.e. lag -2 means correlation between tip.f[t-2] and move[t] --> tip.f leading ahead of movement
 
 # ---------------------------------------------------------------------------
 # 7. Compute and plot weighted CCFs  (optional pre-clustering)
@@ -442,9 +446,6 @@ printEdges <- function(x) print(c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
 heatmap.edges <- Edges(ccf.tip.dctm); 
 heatmap.edges
 
-# Manually select size of top subcluster based on the heatmap:
-
-guide.size = 9
 
 setwd(folder.names[1])
 save.image("LastWorkspace_CCFs.Rdata")
