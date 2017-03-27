@@ -1,3 +1,5 @@
+"Script obsolete, replaced by BounderR_CCF_Randomisations.R"
+
 ## NEW R SCRIPT FOR DATASET RANDOMISATIONS AND AUTOMATED HIERARCHICAL CLUSTERING:
 
 
